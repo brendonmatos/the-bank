@@ -1,0 +1,17 @@
+{
+  "name": "tests-gun",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "devDependencies": {
+    "@vitest/ui": "^0.22.1",
+    "vitest": "^0.22.1"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}

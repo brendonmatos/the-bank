@@ -1,0 +1,1 @@
+docker-compose exec mysql-database /docker-entrypoint-initdb.d/truncate-all.sh
