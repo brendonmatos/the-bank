@@ -1,4 +1,4 @@
-FROM mysql:5.7
+FROM mysql:8.0
 WORKDIR /app
 # COPY truncate-all.sh .
 # COPY init-logs.sh .
