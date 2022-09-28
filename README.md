@@ -43,3 +43,12 @@ Ou se preferir, pode utilizar o script da raiz do projeto e navegar nas opções
 ### vitest (testes automatizados): 
 > - url: [http://localhost:51204/__vitest__](http://localhost:51204/__vitest__) 
 > - só dar play
+
+
+## Future 
+- https://github.com/redpanda-data/redpanda (Messaging)
+- https://github.com/surrealdb/surrealdb (Database)
+- https://github.com/hasura/graphql-engine (GraphQL)
+- https://github.com/phoenixframework/phoenix (API Rest / Admin)
+- https://github.com/zinclabs/zinc (Search)
+- https://github.com/elastic/beats (Monitoring)
