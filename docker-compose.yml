@@ -1,288 +1,297 @@
 version: "3.2"
 services:
-  api-gateway:
-    build: ./services/api-gateway
-    env_file: .env
+  # api-gateway:
+  #   build: ./services/api-gateway
+  #   env_file: .env
+  #   restart: always
+
+  #   # dependencies
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     mysql-database:
+  #       condition: service_healthy
+  #     auth-service:
+  #       condition: service_healthy
+  #     contas-service:
+  #       condition: service_healthy
+  #     gerentes-service:
+  #       condition: service_healthy
+  #     clientes-service:
+  #       condition: service_healthy
+
+  #   healthcheck:
+  #     test: "wget --no-verbose --tries=1 --spider http://localhost:3000/api/v1/health || exit 1"
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 20
+
+  #   # reservations
+  #   mem_limit: 512m
+  #   mem_reservation: 128M
+  #   cpus: 0.5
+
+  #   environment:
+  #     - PORT=3000
+  #   volumes:
+  #     - ./services/api-gateway/src:/app/src
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - thebank-net
+
+  # auth-service:
+  #   build: ./services/auth-service
+  #   env_file: .env
+  #   restart: always
+
+  #   # dependencies
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     mysql-database:
+  #       condition: service_healthy
+
+  #   healthcheck:
+  #     test: "curl --fail --silent localhost:${SERVER_PORT}/actuator/health | grep UP || exit 1"
+  #     interval: 20s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 40s
+
+  #   # reservations
+  #   mem_limit: 512m
+  #   mem_reservation: 128M
+  #   cpus: 0.5
+
+  #   environment:
+  #     SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-database:3306/auth"
+  #     SERVER_SERVLET_CONTEXT_PATH: /
+  #     SERVER_PORT: 3000
+
+  #   volumes:
+  #     - $HOME/.m2:/root/.m2
+  #     - ./services/auth-service:/app
+  #   networks:
+  #     - thebank-net
+
+  # clientes-service:
+  #   build: ./services/clientes-service
+  #   env_file: .env
+  #   restart: always
+
+  #   healthcheck:
+  #     test: "curl --fail --silent localhost:${SERVER_PORT}/actuator/health | grep UP || exit 1"
+  #     interval: 20s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 40s
+
+  #   # dependencies
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     mysql-database:
+  #       condition: service_healthy
+
+  #   # reservations
+  #   mem_limit: 512m
+  #   mem_reservation: 128M
+  #   cpus: 0.5
+
+  #   environment:
+  #     SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-database:3306/clientes"
+  #     SERVER_SERVLET_CONTEXT_PATH: /
+  #     SERVER_PORT: 3000
+
+  #   volumes:
+  #     - $HOME/.m2:/root/.m2
+  #     - ./services/clientes-service:/app
+  #   networks:
+  #     - thebank-net
+
+  # gerentes-service:
+  #   build: ./services/gerentes-service
+  #   env_file: .env
+  #   restart: always
+
+  #   healthcheck:
+  #     test: "curl --fail --silent localhost:${SERVER_PORT}/actuator/health | grep UP || exit 1"
+  #     interval: 20s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 40s
+
+  #   # dependencies
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     mysql-database:
+  #       condition: service_healthy
+
+  #   # reservations
+  #   mem_limit: 512m
+  #   mem_reservation: 128M
+  #   cpus: 0.5
+
+  #   environment:
+  #     SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-database:3306/gerentes"
+  #     SERVER_SERVLET_CONTEXT_PATH: /
+  #     SERVER_PORT: 3000
+
+  #   volumes:
+  #     - $HOME/.m2:/root/.m2
+  #     - ./services/gerentes-service:/app
+  #   networks:
+  #     - thebank-net
+
+  # contas-service:
+  #   build: ./services/contas-service
+  #   env_file: .env
+  #   restart: always
+
+  #   healthcheck:
+  #     test: "curl --fail --silent localhost:${SERVER_PORT}/actuator/health | grep UP || exit 1"
+  #     interval: 20s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 40s
+
+  #   # dependencies
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     mysql-database:
+  #       condition: service_healthy
+
+  #   # reservations
+  #   mem_limit: 512m
+  #   mem_reservation: 128M
+  #   cpus: 0.5
+
+  #   environment:
+  #     SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-database:3306/contas"
+  #     SERVER_SERVLET_CONTEXT_PATH: /
+  #     SERVER_PORT: 3000
+
+  #   volumes:
+  #     - $HOME/.m2:/root/.m2
+  #     - ./services/contas-service:/app
+  #   networks:
+  #     - thebank-net
+
+  # tests-gun:
+  #   build: ./services/tests-gun
+  #   env_file: .env
+
+  #   # reservations
+  #   mem_limit: 512m
+  #   mem_reservation: 128M
+  #   cpus: 0.5
+
+  #   depends_on:
+  #     api-gateway:
+  #       condition: service_healthy
+
+  #   volumes:
+  #     - ./services/tests-gun/src:/app/src
+  #     - ./services/tests-gun/vite.config.ts:/app/vite.config.ts
+  #   ports:
+  #     - "51204:51204"
+  #   networks:
+  #     - thebank-net
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
+
+  #   healthcheck:
+  #     test: rabbitmq-diagnostics -q ping
+  #     interval: 30s
+  #     timeout: 30s
+  #     retries: 3
+
+  #   # reservations
+  #   mem_limit: 3g
+  #   mem_reservation: 1g
+  #   cpus: 0.5
+
+  #   ports:
+  #     - 5672:5672
+  #     - 15672:15672
+  #   env_file: .env
+  #   volumes:
+  #     - ./.docker-conf/rabbitmq:/var/lib/rabbitmq/
+  #     - rabbitmq_log:/var/log/rabbitmq/
+  #     - type: bind
+  #       source: ./services/rabbitmq/plugins
+  #       target: /etc/rabbitmq/enabled_plugins
+  #     - type: bind
+  #       source: ./services/rabbitmq/setup.conf
+  #       target: /etc/rabbitmq/rabbitmq.conf
+  #     - type: bind
+  #       source: ./services/rabbitmq/definitions.json
+  #       target: /etc/rabbitmq/definitions.json
+
+  #   networks:
+  #     - thebank-net
+
+  # mysql-database:
+  #   build: ./services/mysql
+  #   platform: linux/amd64
+  #   env_file: .env
+
+  #   # reservations
+  #   mem_limit: 512m
+  #   mem_reservation: 128m
+  #   cpus: 0.5
+
+  #   # healthcheck:
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #     timeout: 20s
+  #     retries: 10
+
+  #   ulimits:
+  #     nproc: 65535
+  #     nofile:
+  #       soft: 26677
+  #       hard: 46677
+
+  #   volumes:
+  #     - ./.docker-conf/mysql/data/:/var/lib/mysql/
+  #     - ./services/mysql:/docker-entrypoint-initdb.d
+  #     - ./logs/mysql:/var/log/mysql
+  #   networks:
+  #     - thebank-net
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   env_file: .env
+  #   environment:
+  #     PMA_HOST: mysql-database
+  #     PMA_PORT: 3306
+  #   restart: always
+
+  #   depends_on:
+  #     mysql-database:
+  #       condition: service_healthy
+
+  #   # reservations
+  #   mem_limit: 512m
+  #   mem_reservation: 128m
+  #   cpus: 0.5
+
+  #   ports:
+  #     - 8081:80
+  #   networks:
+  #     - thebank-net
+
+  gerentes-service-go:
+    build: ./services/gerentes-service-go
+    # env_file: .env
     restart: always
-
-    # dependencies
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      mysql-database:
-        condition: service_healthy
-      auth-service:
-        condition: service_healthy
-      contas-service:
-        condition: service_healthy
-      gerentes-service:
-        condition: service_healthy
-      clientes-service:
-        condition: service_healthy
-
-    healthcheck:
-      test: "wget --no-verbose --tries=1 --spider http://localhost:3000/api/v1/health || exit 1"
-      interval: 10s
-      timeout: 5s
-      retries: 20
-
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
-
-    environment:
-      - PORT=3000
-    volumes:
-      - ./services/api-gateway/src:/app/src
     ports:
-      - "3000:3000"
-    networks:
-      - thebank-net
-
-  auth-service:
-    build: ./services/auth-service
-    env_file: .env
-    restart: always
-
-    # dependencies
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      mysql-database:
-        condition: service_healthy
-
-    healthcheck:
-      test: "curl --fail --silent localhost:${SERVER_PORT}/actuator/health | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 5
-      start_period: 40s
-
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
-
-    environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-database:3306/auth"
-      SERVER_SERVLET_CONTEXT_PATH: /
-      SERVER_PORT: 3000
-
-    volumes:
-      - $HOME/.m2:/root/.m2
-      - ./services/auth-service:/app
-    networks:
-      - thebank-net
-
-  clientes-service:
-    build: ./services/clientes-service
-    env_file: .env
-    restart: always
-
-    healthcheck:
-      test: "curl --fail --silent localhost:${SERVER_PORT}/actuator/health | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 5
-      start_period: 40s
-
-    # dependencies
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      mysql-database:
-        condition: service_healthy
-
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
-
-    environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-database:3306/clientes"
-      SERVER_SERVLET_CONTEXT_PATH: /
-      SERVER_PORT: 3000
-
-    volumes:
-      - $HOME/.m2:/root/.m2
-      - ./services/clientes-service:/app
-    networks:
-      - thebank-net
-
-  gerentes-service:
-    build: ./services/gerentes-service
-    env_file: .env
-    restart: always
-
-    healthcheck:
-      test: "curl --fail --silent localhost:${SERVER_PORT}/actuator/health | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 5
-      start_period: 40s
-
-    # dependencies
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      mysql-database:
-        condition: service_healthy
-
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
-
-    environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-database:3306/gerentes"
-      SERVER_SERVLET_CONTEXT_PATH: /
-      SERVER_PORT: 3000
-
-    volumes:
-      - $HOME/.m2:/root/.m2
-      - ./services/gerentes-service:/app
-    networks:
-      - thebank-net
-
-  contas-service:
-    build: ./services/contas-service
-    env_file: .env
-    restart: always
-
-    healthcheck:
-      test: "curl --fail --silent localhost:${SERVER_PORT}/actuator/health | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 5
-      start_period: 40s
-
-    # dependencies
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      mysql-database:
-        condition: service_healthy
-
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
-
-    environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-database:3306/contas"
-      SERVER_SERVLET_CONTEXT_PATH: /
-      SERVER_PORT: 3000
-
-    volumes:
-      - $HOME/.m2:/root/.m2
-      - ./services/contas-service:/app
-    networks:
-      - thebank-net
-
-  tests-gun:
-    build: ./services/tests-gun
-    env_file: .env
-
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
-
-    depends_on:
-      api-gateway:
-        condition: service_healthy
-
-    volumes:
-      - ./services/tests-gun/src:/app/src
-      - ./services/tests-gun/vite.config.ts:/app/vite.config.ts
-    ports:
-      - "51204:51204"
-    networks:
-      - thebank-net
-
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-
-    healthcheck:
-      test: rabbitmq-diagnostics -q ping
-      interval: 30s
-      timeout: 30s
-      retries: 3
-
-    # reservations
-    mem_limit: 3g
-    mem_reservation: 1g
-    cpus: 0.5
-
-    ports:
-      - 5672:5672
-      - 15672:15672
-    env_file: .env
-    volumes:
-      - ./.docker-conf/rabbitmq:/var/lib/rabbitmq/
-      - rabbitmq_log:/var/log/rabbitmq/
-      - type: bind
-        source: ./services/rabbitmq/plugins
-        target: /etc/rabbitmq/enabled_plugins
-      - type: bind
-        source: ./services/rabbitmq/setup.conf
-        target: /etc/rabbitmq/rabbitmq.conf
-      - type: bind
-        source: ./services/rabbitmq/definitions.json
-        target: /etc/rabbitmq/definitions.json
-
-    networks:
-      - thebank-net
-
-  mysql-database:
-    build: ./services/mysql
-    platform: linux/amd64
-    env_file: .env
-
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128m
-    cpus: 0.5
-
-    # healthcheck:
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-
-    ulimits:
-      nproc: 65535
-      nofile:
-        soft: 26677
-        hard: 46677
-
-    volumes:
-      - ./.docker-conf/mysql/data/:/var/lib/mysql/
-      - ./services/mysql:/docker-entrypoint-initdb.d
-      - ./logs/mysql:/var/log/mysql
-    networks:
-      - thebank-net
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    env_file: .env
-    environment:
-      PMA_HOST: mysql-database
-      PMA_PORT: 3306
-    restart: always
-
-    depends_on:
-      mysql-database:
-        condition: service_healthy
-
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128m
-    cpus: 0.5
-
-    ports:
-      - 8081:80
+      - "8080:8080"
     networks:
       - thebank-net
 
