@@ -32,7 +32,19 @@ func (r *GerenteRepositoryMysql) GetAll() (*[]service.Gerente, error) {
 	return &sgs, tx.Error
 }
 func (r *GerenteRepositoryMysql) Insert(gerente *service.Gerente) (*service.Gerente, error) {
-	return nil, nil
+	g := Gerente{
+		Cpf:   gerente.Cpf,
+		Nome:  gerente.Nome,
+		Email: gerente.Email,
+	}
+
+	tx := r.db.Create(&g)
+
+	return &service.Gerente{
+		Cpf:   g.Cpf,
+		Nome:  g.Nome,
+		Email: g.Email,
+	}, tx.Error
 }
 func (r *GerenteRepositoryMysql) Update(gerente *service.Gerente) (*service.Gerente, error) {
 	return nil, nil

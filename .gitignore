@@ -16,3 +16,4 @@ target/
 .docker-conf/
 .idea/
 logs/
+tmp/

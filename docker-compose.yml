@@ -287,9 +287,15 @@ services:
       - thebank-net
 
   gerentes-service-go:
-    build: ./services/gerentes-service-go
+    # build: ./services/gerentes-service-go
+    build:
+      context: ./services/gerentes-service-go
+      dockerfile: dev.Dockerfile
     env_file: .env
     restart: always
+
+    volumes:
+      - ./services/gerentes-service-go:/app
 
     depends_on:
       mysql-database:
