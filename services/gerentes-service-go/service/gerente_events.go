@@ -1,6 +1,6 @@
 package service
 
-type GerenteBus interface {
+type GerenteEvents interface {
 	Created(gerente Gerente) error
 	OnCreate(handler func(g Gerente) error) error
 }

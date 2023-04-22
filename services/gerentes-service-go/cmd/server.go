@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-
 	"github.com/brendonmatos/the-bank/services/gerentes-service-go/infra"
 	"github.com/brendonmatos/the-bank/services/gerentes-service-go/service"
 )
@@ -10,15 +8,13 @@ import (
 func main() {
 	grm := infra.NewGerenteRepositoryMysql()
 
-	rabbitMqConnUri := os.Getenv("RABBITMQ_CONNECTION_URI")
-	httpPort := os.Getenv("SERVER_PORT")
-	bus := infra.NewGerenteBusRabbitMq(
-		rabbitMqConnUri,
+	events := infra.NewGerenteEventsRabbitMq(
+		infra.RABBIT_MQ_CONNECTION_URI,
 	)
 
-	s := service.NewGerenteService(grm, bus)
+	s := service.NewGerenteService(grm, events)
 
-	err := bus.OnCreate(func(g service.Gerente) error {
+	err := events.OnCreate(func(g service.Gerente) error {
 		_, err := s.AddGerente(g)
 
 		if err != nil {
@@ -32,6 +28,6 @@ func main() {
 		panic(err)
 	}
 
-	infra.MakeHttpServer(":"+httpPort, s)
+	infra.MakeHttpServer(":"+infra.SERVER_PORT, s)
 
 }

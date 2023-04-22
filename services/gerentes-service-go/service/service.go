@@ -12,16 +12,16 @@ type Service interface {
 	UpdateGerente(gerente Gerente) (*Gerente, error)
 }
 
-func NewGerenteService(gr GerenteRepository, bus GerenteBus) Service {
+func NewGerenteService(gr GerenteRepository, events GerenteEvents) Service {
 	return &service{
 		gerentePository: gr,
-		bus:             bus,
+		events:          events,
 	}
 }
 
 type service struct {
 	gerentePository GerenteRepository
-	bus             GerenteBus
+	events          GerenteEvents
 }
 
 // AddGerente implements Service
@@ -33,7 +33,7 @@ func (s *service) AddGerente(gerente Gerente) (*Gerente, error) {
 		return nil, fmt.Errorf("error inserting gerente: %w", err)
 	}
 
-	err = s.bus.Created(Gerente{
+	err = s.events.Created(Gerente{
 		Nome:  g.Nome,
 		Cpf:   g.Cpf,
 		Email: g.Email,

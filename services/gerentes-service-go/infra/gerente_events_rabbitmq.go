@@ -9,20 +9,20 @@ import (
 	"github.com/wagslane/go-rabbitmq"
 )
 
-type gerenteBusRabbitMq struct {
+type gerenteEventsRabbitMq struct {
 	conn      *rabbitmq.Conn
 	publisher *rabbitmq.Publisher
 }
 
-// Created implements service.GerenteBus
-func (bus *gerenteBusRabbitMq) Created(gerente service.Gerente) error {
+// Created implements
+func (events *gerenteEventsRabbitMq) Created(gerente service.Gerente) error {
 	messageStr, err := json.Marshal(gerente)
 
 	if err != nil {
 		return fmt.Errorf("error marshalling message: %v", err)
 	}
 
-	err = bus.publisher.Publish(
+	err = events.publisher.Publish(
 		messageStr,
 		[]string{"gerente_criado"},
 	)
@@ -34,9 +34,9 @@ func (bus *gerenteBusRabbitMq) Created(gerente service.Gerente) error {
 	return nil
 }
 
-func (bus *gerenteBusRabbitMq) OnCreate(handler func(g service.Gerente) error) error {
+func (events *gerenteEventsRabbitMq) OnCreate(handler func(g service.Gerente) error) error {
 	_, err := rabbitmq.NewConsumer(
-		bus.conn,
+		events.conn,
 		func(d rabbitmq.Delivery) rabbitmq.Action {
 			g := Gerente{}
 
@@ -74,7 +74,7 @@ func (bus *gerenteBusRabbitMq) OnCreate(handler func(g service.Gerente) error) e
 	return nil
 }
 
-func NewGerenteBusRabbitMq(url string) service.GerenteBus {
+func NewGerenteEventsRabbitMq(url string) service.GerenteEvents {
 
 	conn, err := rabbitmq.NewConn(
 		url,
@@ -93,7 +93,5 @@ func NewGerenteBusRabbitMq(url string) service.GerenteBus {
 		panic(err)
 	}
 
-	defer publisher.Close()
-
-	return &gerenteBusRabbitMq{conn: conn, publisher: publisher}
+	return &gerenteEventsRabbitMq{conn: conn, publisher: publisher}
 }
