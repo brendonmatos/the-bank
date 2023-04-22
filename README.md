@@ -16,7 +16,7 @@ docker-compose up
 Ou se preferir, pode utilizar o script da raiz do projeto e navegar nas opções:
 
 ```bash
-./run.sh
+./up.sh
 ```
 
 ## Status

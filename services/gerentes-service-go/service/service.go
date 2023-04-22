@@ -5,11 +5,11 @@ import (
 )
 
 type Service interface {
-	AddGerente(gerente Gerente) (Gerente, error)
+	AddGerente(gerente Gerente) (*Gerente, error)
 	GetAllGerentes() ([]Gerente, error)
-	GetGerenteByCpf(cpf string) (Gerente, error)
+	GetGerenteByCpf(cpf string) (*Gerente, error)
 	RemoveGerenteByCpf(cpf string) error
-	UpdateGerente(gerente Gerente) (Gerente, error)
+	UpdateGerente(gerente Gerente) (*Gerente, error)
 }
 
 func NewGerenteService(gr GerenteRepository, bus GerenteBus) Service {
@@ -25,12 +25,12 @@ type service struct {
 }
 
 // AddGerente implements Service
-func (s *service) AddGerente(gerente Gerente) (Gerente, error) {
+func (s *service) AddGerente(gerente Gerente) (*Gerente, error) {
 
 	g, err := s.gerentePository.Insert(&gerente)
 
 	if err != nil {
-		return Gerente{}, fmt.Errorf("error inserting gerente: %w", err)
+		return nil, fmt.Errorf("error inserting gerente: %w", err)
 	}
 
 	err = s.bus.Created(Gerente{
@@ -40,10 +40,10 @@ func (s *service) AddGerente(gerente Gerente) (Gerente, error) {
 	})
 
 	if err != nil {
-		return Gerente{}, fmt.Errorf("error sending event: %w", err)
+		return nil, fmt.Errorf("error sending event: %w", err)
 	}
 
-	return *g, err
+	return g, err
 }
 
 // GetAllGerentes implements Service
@@ -53,9 +53,9 @@ func (s *service) GetAllGerentes() ([]Gerente, error) {
 }
 
 // GetGerenteByCpf implements Service
-func (s *service) GetGerenteByCpf(cpf string) (Gerente, error) {
+func (s *service) GetGerenteByCpf(cpf string) (*Gerente, error) {
 	g, e := s.gerentePository.GetByCpf(cpf)
-	return *g, e
+	return g, e
 }
 
 // RemoveGerenteByCpf implements Service
@@ -65,7 +65,7 @@ func (s *service) RemoveGerenteByCpf(cpf string) error {
 }
 
 // UpdateGerente implements Service
-func (s *service) UpdateGerente(gerente Gerente) (Gerente, error) {
+func (s *service) UpdateGerente(gerente Gerente) (*Gerente, error) {
 	gs, e := s.gerentePository.Update(&gerente)
-	return *gs, e
+	return gs, e
 }

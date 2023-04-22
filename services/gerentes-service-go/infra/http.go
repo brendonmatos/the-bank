@@ -25,9 +25,7 @@ func MakeHttpServer(
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{
-			"items": gs,
-		})
+		c.JSON(http.StatusOK, gs)
 	})
 
 	r.GET("/:cpf", func(c *gin.Context) {
@@ -37,6 +35,24 @@ func MakeHttpServer(
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
+		c.JSON(http.StatusOK, g)
+	})
+
+	r.PUT("/:cpf", func(c *gin.Context) {
+		var g service.Gerente
+		if err := c.ShouldBindJSON(&g); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		g.Cpf = c.GetString("cpf")
+
+		_, err := s.UpdateGerente(g)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
 		c.JSON(http.StatusOK, g)
 	})
 
