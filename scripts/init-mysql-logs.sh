@@ -1,1 +1,0 @@
-docker-compose exec mysql-database "/docker-entrypoint-initdb.d/init-logs.sh"

@@ -45,7 +45,6 @@ services:
     env_file: .env
     restart: always
 
-    # dependencies
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -59,13 +58,12 @@ services:
       retries: 5
       start_period: 40s
 
-    # reservations
     mem_limit: 512m
     mem_reservation: 128M
     cpus: 0.5
 
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_HOST}/auth"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_URL}/auth"
       SERVER_SERVLET_CONTEXT_PATH: /
       SERVER_PORT: 3000
 
@@ -87,20 +85,18 @@ services:
       retries: 5
       start_period: 40s
 
-    # dependencies
     depends_on:
       rabbitmq:
         condition: service_healthy
       mysql-database:
         condition: service_healthy
 
-    # reservations
     mem_limit: 512m
     mem_reservation: 128M
     cpus: 0.5
 
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_HOST}/clientes"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_URL}/clientes"
       SERVER_SERVLET_CONTEXT_PATH: /
       SERVER_PORT: 3000
 
@@ -111,7 +107,7 @@ services:
       - thebank-net
 
   # gerentes-service:
-  #   build: ./services/gerentes-service
+  #   build: ./services/gerentes-service-java
   #   env_file: .env
   #   restart: always
 
@@ -145,6 +141,36 @@ services:
   #   networks:
   #     - thebank-net
 
+
+  gerentes-service:
+    build:
+      context: ./services/gerentes-service-go
+      dockerfile: dev.Dockerfile
+    env_file: .env
+    restart: always
+
+    volumes:
+      - ./services/gerentes-service-go:/app
+
+    healthcheck:
+      test: "wget --no-verbose --tries=1 --spider http://localhost:${SERVER_PORT}/health || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+    depends_on:
+      mysql-database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+    environment:
+      GORM_DSN: "${MYSQL_ROOT_USER}:${MYSQL_ROOT_PASSWORD}@tcp(${MYSQL_URL})/gerentes?charset=utf8&parseTime=True&loc=Local"
+    ports:
+      - "8080:3000"
+    networks:
+      - thebank-net
+
   contas-service:
     build: ./services/contas-service
     env_file: .env
@@ -170,7 +196,7 @@ services:
     cpus: 0.5
 
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_HOST}/contas"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_URL}/contas"
       SERVER_SERVLET_CONTEXT_PATH: /
       SERVER_PORT: 3000
 
@@ -264,11 +290,11 @@ services:
       - thebank-net
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin
     env_file: .env
     environment:
-      PMA_HOST: mysql-database
-      PMA_PORT: 3306
+      PMA_HOST: ${MYSQL_HOST}
+      PMA_PORT: ${MYSQL_PORT}
     restart: always
 
     depends_on:
@@ -285,74 +311,6 @@ services:
     networks:
       - thebank-net
 
-  gerentes-service:
-    # build: ./services/gerentes-service-go
-    build:
-      context: ./services/gerentes-service-go
-      dockerfile: dev.Dockerfile
-    env_file: .env
-    restart: always
-
-    volumes:
-      - ./services/gerentes-service-go:/app
-
-    healthcheck:
-      test: "wget --no-verbose --tries=1 --spider http://localhost:${SERVER_PORT}/health || exit 1"
-      interval: 10s
-      timeout: 5s
-      retries: 20
-
-    depends_on:
-      mysql-database:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-
-    environment:
-      GORM_DSN: "${MYSQL_ROOT_USER}:${MYSQL_ROOT_PASSWORD}@tcp(${MYSQL_HOST})/gerentes?charset=utf8&parseTime=True&loc=Local"
-    ports:
-      - "8080:3000"
-    networks:
-      - thebank-net
-
-  # elasticsearch:
-  #   image: "docker.elastic.co/elasticsearch/elasticsearch:7.17.0"
-  #   environment:
-  #     - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-  #     - "discovery.type=single-node"
-  #   volumes:
-  #     - .docker-conf/elasticsearch/data:/usr/share/elasticsearch/data
-  #   networks:
-  #     - thebank-net
-
-  # kibana:
-  #   image: "docker.elastic.co/kibana/kibana:7.17.0"
-  #   ports:
-  #     - "5601:5601"
-  #   networks:
-  #     - thebank-net
-
-  # filebeat:
-  #   image: "docker.elastic.co/beats/filebeat:7.17.0"
-  #   user: root
-  #   volumes:
-  #     - ./services/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-  #     - /var/lib/docker:/var/lib/docker:ro
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   networks:
-  #     - thebank-net
-
-  # packetbeat-host:
-  #   build: ./services/packetbeat
-  #   command: -e
-  #   cap_add:
-  #     - NET_ADMIN
-  #   environment:
-  #     - "WAIT_FOR_HOSTS=elasticsearch:9200 kibana:5667"
-  #     - "HOST_ELASTICSEARCH=elasticsearch:9200"
-  #     - "HOST_KIBANA=kibana:5601"
-  #   networks:
-  #     - thebank-net
 
 volumes:
   rabbitmq_data:
