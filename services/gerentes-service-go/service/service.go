@@ -1,5 +1,9 @@
 package service
 
+import (
+	"fmt"
+)
+
 type Service interface {
 	AddGerente(gerente Gerente) (Gerente, error)
 	GetAllGerentes() ([]Gerente, error)
@@ -8,20 +12,38 @@ type Service interface {
 	UpdateGerente(gerente Gerente) (Gerente, error)
 }
 
-func NewGerenteService(gr GerenteRepository) Service {
+func NewGerenteService(gr GerenteRepository, bus GerenteBus) Service {
 	return &service{
 		gerentePository: gr,
+		bus:             bus,
 	}
 }
 
 type service struct {
 	gerentePository GerenteRepository
+	bus             GerenteBus
 }
 
 // AddGerente implements Service
 func (s *service) AddGerente(gerente Gerente) (Gerente, error) {
-	g, e := s.gerentePository.Insert(&gerente)
-	return *g, e
+
+	g, err := s.gerentePository.Insert(&gerente)
+
+	if err != nil {
+		return Gerente{}, fmt.Errorf("error inserting gerente: %w", err)
+	}
+
+	err = s.bus.Created(Gerente{
+		Nome:  g.Nome,
+		Cpf:   g.Cpf,
+		Email: g.Email,
+	})
+
+	if err != nil {
+		return Gerente{}, fmt.Errorf("error sending event: %w", err)
+	}
+
+	return *g, err
 }
 
 // GetAllGerentes implements Service

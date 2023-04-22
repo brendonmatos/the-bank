@@ -25,10 +25,19 @@ func MakeHttpServer(
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-
 		c.JSON(http.StatusOK, gin.H{
 			"items": gs,
 		})
+	})
+
+	r.GET("/:cpf", func(c *gin.Context) {
+		g, err := s.GetGerenteByCpf(c.GetString("cpf"))
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, g)
 	})
 
 	r.POST("/", func(c *gin.Context) {
@@ -49,6 +58,10 @@ func MakeHttpServer(
 		})
 	})
 
+	r.GET("/health", func(c *gin.Context) {
+		c.Data(http.StatusOK, "text/plain", []byte("UP"))
+	})
+
 	srv := &http.Server{
 		Addr:    port,
 		Handler: r,
@@ -60,6 +73,9 @@ func MakeHttpServer(
 		}
 	}()
 
+	fmt.Println("Server started on port", port)
+
+	// https://gin-gonic.com/docs/examples/graceful-restart-or-stop/
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit

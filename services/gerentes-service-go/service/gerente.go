@@ -1,7 +1,7 @@
 package service
 
 type Gerente struct {
-	Cpf   string
-	Nome  string
-	Email string
+	Cpf   string `json:"cpf"`
+	Nome  string `json:"nome"`
+	Email string `json:"email"`
 }

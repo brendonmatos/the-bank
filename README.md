@@ -59,3 +59,4 @@ Ou se preferir, pode utilizar o script da raiz do projeto e navegar nas opções
 - <https://github.com/phoenixframework/phoenix> (API Rest / Admin)
 - <https://github.com/zinclabs/zinc> (Search)
 - <https://github.com/elastic/beats> (Monitoring)
+- <https://github.com/grafana/grafana> (Monitoring)
