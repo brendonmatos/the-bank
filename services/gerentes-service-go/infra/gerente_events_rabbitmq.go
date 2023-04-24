@@ -38,7 +38,7 @@ func (events *gerenteEventsRabbitMq) OnCreate(handler func(g service.Gerente) er
 	_, err := rabbitmq.NewConsumer(
 		events.conn,
 		func(d rabbitmq.Delivery) rabbitmq.Action {
-			g := Gerente{}
+			g := GerenteInfra{}
 
 			err := json.Unmarshal(d.Body, &g)
 

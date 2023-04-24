@@ -16,7 +16,7 @@ func (r *GerenteRepositoryMysql) GetByCpf(cpf string) (*service.Gerente, error) 
 	return nil, nil
 }
 func (r *GerenteRepositoryMysql) GetAll() (*[]service.Gerente, error) {
-	gs := []Gerente{}
+	gs := []GerenteInfra{}
 	tx := r.db.Find(&gs)
 
 	sgs := []service.Gerente{}
@@ -31,7 +31,7 @@ func (r *GerenteRepositoryMysql) GetAll() (*[]service.Gerente, error) {
 	return &sgs, tx.Error
 }
 func (r *GerenteRepositoryMysql) Insert(gerente *service.Gerente) (*service.Gerente, error) {
-	g := Gerente{
+	g := GerenteInfra{
 		Cpf:   gerente.Cpf,
 		Nome:  gerente.Nome,
 		Email: gerente.Email,
@@ -64,7 +64,7 @@ func NewGerenteRepositoryMysql() service.GerenteRepository {
 		panic(err)
 	}
 
-	db.AutoMigrate(&Gerente{})
+	db.AutoMigrate(&GerenteInfra{})
 
 	return &GerenteRepositoryMysql{
 		db: db,
