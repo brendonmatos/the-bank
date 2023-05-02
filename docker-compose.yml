@@ -1,5 +1,14 @@
 version: "3.2"
 services:
+
+  # gogs: 
+  #   image: gogs/gogs:latest
+  #   ports:
+  #     - "10022:22"
+  #     - "10880:3000"
+  #   volumes:
+  #     - /var/gogs:/data
+
   api-gateway:
     build: ./services/api-gateway
     env_file: .env
