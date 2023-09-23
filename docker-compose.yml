@@ -1,16 +1,6 @@
 version: "3.2"
 services:
 
-  gogs: 
-    image: gogs/gogs:latest
-    deploy:
-      replicas: 0
-    ports:
-      - "10022:22"
-      - "10880:3000"
-    volumes:
-      - /var/gogs:/data
-
   api-gateway:
     build: ./services/api-gateway
     env_file: .env
@@ -164,7 +154,7 @@ services:
 
   gerentes-service:
     build:
-      context: ./services/gerentes-service-go
+      context: ./services/gerentes-service
       dockerfile: dev.Dockerfile
     env_file: .env
     restart: always
@@ -173,7 +163,7 @@ services:
       replicas: 1
 
     volumes:
-      - ./services/gerentes-service-go:/app
+      - ./services/gerentes-service:/app
 
     healthcheck:
       test: "wget --no-verbose --tries=1 --spider http://localhost:${SERVER_PORT}/health || exit 1"
