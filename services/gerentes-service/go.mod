@@ -1,4 +1,4 @@
-module github.com/brendonmatos/the-bank/services/gerentes-service-go
+module github.com/brendonmatos/the-bank/services/gerentes-service
 
 go 1.18
 

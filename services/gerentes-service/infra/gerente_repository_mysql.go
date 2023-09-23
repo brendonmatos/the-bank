@@ -3,7 +3,7 @@ package infra
 import (
 	"fmt"
 
-	"github.com/brendonmatos/the-bank/services/gerentes-service-go/service"
+	"github.com/brendonmatos/the-bank/services/gerentes-service/service"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

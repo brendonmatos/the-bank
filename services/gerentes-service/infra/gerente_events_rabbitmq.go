@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/brendonmatos/the-bank/services/gerentes-service-go/service"
+	"github.com/brendonmatos/the-bank/services/gerentes-service/service"
 	"github.com/wagslane/go-rabbitmq"
 )
 

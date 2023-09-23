@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/brendonmatos/the-bank/services/gerentes-service-go/service"
+	"github.com/brendonmatos/the-bank/services/gerentes-service/service"
 	"github.com/gin-gonic/gin"
 )
 

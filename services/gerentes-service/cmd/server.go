@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/brendonmatos/the-bank/services/gerentes-service-go/infra"
-	"github.com/brendonmatos/the-bank/services/gerentes-service-go/service"
+	"github.com/brendonmatos/the-bank/services/gerentes-service/infra"
+	"github.com/brendonmatos/the-bank/services/gerentes-service/service"
 )
 
 func main() {
