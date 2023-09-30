@@ -1,8 +1,8 @@
-FROM node:16-alpine
+FROM oven/bun:latest
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --verbose
+RUN bun install
 COPY . .
 EXPOSE 8080
-CMD ["npm", "run", "dev"]
+CMD ["bun", "run", "./src/server.js"]

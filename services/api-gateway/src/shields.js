@@ -1,3 +1,5 @@
+const services = require("./services");
+
 const ACCESS_LEVELS = {
     cliente: 0,
     gerente: 1,
@@ -14,6 +16,29 @@ const isClienteShield = (req, res, next) => {
     const isCliente = nivelIsCliente(req.userInfo.nivel)
     if (isCliente) return next()
     return res.status(403).end();
+}
+
+const fraudesShield = ({
+    toleranciaMaxima = 0.8,
+    operationType,
+}) => async (req, res, next) => {
+    
+    const response = await fraudesService.fraudesCheck({
+        sessionId: req.userInfo.sessionId,
+        clienteId: req.userInfo.clienteId,
+        operationType,
+        amount: req.body.amount,
+        status: req.body.status,
+        contaOrigemId: req.body.contaOrigemId,
+        contaDestinoId: req.body.contaDestinoId,
+    })
+
+    if (response.data.fraudesScore > toleranciaMaxima) {
+        return res.status(403).end();
+    }
+
+    return next()
+            
 }
 
 const nivelIsCliente = (nivel) => {
@@ -42,5 +67,6 @@ module.exports = {
     isGerenteShield,
     nivelIsAdmin,
     nivelIsCliente,
-    nivelIsGerente
+    nivelIsGerente,
+    fraudesShield
 }

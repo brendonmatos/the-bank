@@ -48,12 +48,10 @@ const contasService = {
             }
         })
 
-        console.log("CONTAS", response.data)
         for (const conta of response.data) {
             const clienteResponse = await clientesService.detalhePorCpf(conta.cpf)
             conta.cliente = clienteResponse.data
         }
-
 
         return response
     },
@@ -141,6 +139,33 @@ const gerentesService = {
     },
 }
 
+const fraudesService = {
+    http: Axios.create({
+        baseURL: process.env.FRAUDES_SERVICE,
+        validateStatus: status => true
+    }),
+    async fraudesCheck({
+        sessionId,
+        clienteId,
+        operationType,
+        amount,
+        contaOrigemId,
+        contaDestinoId,
+    }) {
+        const response = await this.http.post('/fraudes/analyse', {
+            sessionId,
+            clienteId,
+            operationType,
+            amount,
+            contaOrigemId,
+            contaDestinoId,
+        })
+
+        return response
+    }
+}
+        
+
 const clientesService = {
     http: Axios.create({
         baseURL: process.env.CLIENTES_SERVICE,
@@ -183,9 +208,12 @@ contasService.http.interceptors.request.use(AxiosLogger.requestLogger);
 contasService.http.interceptors.response.use(AxiosLogger.responseLogger);
 gerentesService.http.interceptors.request.use(AxiosLogger.requestLogger);
 gerentesService.http.interceptors.response.use(AxiosLogger.responseLogger);
+fraudesService.http.interceptors.request.use(AxiosLogger.requestLogger);
+fraudesService.http.interceptors.response.use(AxiosLogger.responseLogger);
 
 module.exports = {
     authService,
+    fraudesService,
     clientesService,
     contasService,
     gerentesService,
