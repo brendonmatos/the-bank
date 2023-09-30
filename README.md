@@ -21,11 +21,11 @@ Ou se preferir, pode utilizar o script da raiz do projeto e navegar nas opções
 
 ## Status
 
-| Nome microserviço | Funcionando |   Tecnologia  | Banco de dados | API Rest | gRPC | Pub/Sub | Monitoring |
+| Nome microserviço | Funcionando |   Tecnologia  | Persistência | API Rest | gRPC | Pub/Sub | Monitoring |
 |-------------------|-------------|---------------|----------------|----------|------|---------|------------|
 | clientes-service | ✅ | Java + Spring | ✅ MySQL| ✅ | ❌ | ✅ RabbitMQ | ❌ |
 | contas-service | ✅ | Java + Spring | ✅ MySQL | ✅ | ❌ | ✅ RabbitMQ | ❌ |
-| gerentes-service| ✅ | GoLang + Gin | ✅ MySQL | ✅ | ❌ | ✅ RabbitMQ | ❌ |
+| gerentes-service| ✅ | GoLang + Gin | ✅ Mysql + Redis | ✅ | ❌ | ✅ RabbitMQ | ❌ |
 | auth-service | ✅ | Java + Spring | ✅ MySQL | ✅ | ❌ | ✅ RabbitMQ | ❌ |
 | fraudes-service | ✅ | Django | ✅ MySQL | ✅ | ❌ | ❌ | ❌ |
 | cartoes-service | 💤 | 💤 | 💤 | 💤 | 💤 | 💤 | 💤 |
