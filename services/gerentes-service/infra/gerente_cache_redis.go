@@ -2,7 +2,7 @@ package infra
 
 import (
 	"fmt"
-
+	"context"
 	"github.com/redis/go-redis/v9"
 	"github.com/brendonmatos/the-bank/services/gerentes-service/service"
 )
@@ -12,19 +12,27 @@ type GerenteCacheRedis struct {
 	ctx context.Context
 }
 
-func (r *GerenteCacheRedis) GetByCpf(cpf string) (*service.Gerente, error) {
-
-	val, err := rdb.Get(r.ctx, "gerente:"+cpf).Result()
+func (r *GerenteCacheRedis) GetByCpf(cpf string) *service.Gerente {
+	val, err := r.rdb.Get(r.ctx, "gerente:"+cpf).Result()
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
-	return val.(*service.Gerente), nil
+	var gerente *service.Gerente
+	err = json.Unmarshal([]byte(val), &gerente)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	return gerente
 }
 
 func (r *GerenteCacheRedis) SetByCpf(cpf string, gerente *service.Gerente) error {
 
-	err := rdb.Set(ctx, "gerente:"+cpf, gerente, 0).Err()
+	gerenteStr := json.Marshal(gerente)
+
+	err := r.rdb.Set(r.ctx, "gerente:"+cpf, gerenteStr, 0).Err()
 	if err != nil {
 		return err
 	}
