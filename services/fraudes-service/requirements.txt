@@ -1,0 +1,10 @@
+Django
+djangorestframework
+# djongo
+# psycopg2-binary
+gunicorn
+requests
+mysqlclient
+djangorestframework-camel-case
+# djangorestframework_camel_case
+sqlparse==0.2.4
