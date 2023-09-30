@@ -12,16 +12,19 @@ type Service interface {
 	UpdateGerente(gerente Gerente) (*Gerente, error)
 }
 
-func NewGerenteService(gr GerenteRepository, events GerenteEvents) Service {
+func NewGerenteService(gr GerenteRepository, events GerenteEvents, cache GerenteCache) Service {
 	return &service{
 		gerentePository: gr,
+		gerenteCache:    cache,
 		events:          events,
+
 	}
 }
 
 type service struct {
 	gerentePository GerenteRepository
 	events          GerenteEvents
+	gerenteCache    GerenteCache
 }
 
 // AddGerente implements Service
@@ -54,7 +57,19 @@ func (s *service) GetAllGerentes() ([]Gerente, error) {
 
 // GetGerenteByCpf implements Service
 func (s *service) GetGerenteByCpf(cpf string) (*Gerente, error) {
+
+	if g := s.gerenteCache.GetByCpf(cpf); g != nil {
+		return g, nil
+	}
+
 	g, e := s.gerentePository.GetByCpf(cpf)
+
+	if e != nil {
+		return nil, e
+	}
+
+	s.gerenteCache.SetByCpf(cpf, g)
+
 	return g, e
 }
 
@@ -67,5 +82,12 @@ func (s *service) RemoveGerenteByCpf(cpf string) error {
 // UpdateGerente implements Service
 func (s *service) UpdateGerente(gerente Gerente) (*Gerente, error) {
 	gs, e := s.gerentePository.Update(&gerente)
+
+	if e != nil {
+		return nil, e
+	}
+
+	s.gerenteCache.SetByCpf(gerente.Cpf, gs)
+
 	return gs, e
 }
