@@ -25,11 +25,14 @@ Ou se preferir, pode utilizar o script da raiz do projeto e navegar nas opções
 |-------------------|-------------|---------------|----------------|----------|------|---------|------------|
 | clientes-service | ✅ | Java + Spring | ✅ MySQL| ✅ | ❌ | ✅ RabbitMQ | ❌ |
 | contas-service | ✅ | Java + Spring | ✅ MySQL | ✅ | ❌ | ✅ RabbitMQ | ❌ |
-| gerentes-service| ✅ | Java + Spring | ✅ MySQL | ✅ | ❌ | ✅ RabbitMQ | ❌ |
+| gerentes-service| ✅ | GoLang + Gin | ✅ MySQL | ✅ | ❌ | ✅ RabbitMQ | ❌ |
 | auth-service | ✅ | Java + Spring | ✅ MySQL | ✅ | ❌ | ✅ RabbitMQ | ❌ |
+| fraudes-service | ✅ | Django | ✅ MySQL | ✅ | ❌ | ❌ | ❌ |
 | cartoes-service | 💤 | 💤 | 💤 | 💤 | 💤 | 💤 | 💤 |
-| api-gateway | ✅ | NodeJS + Express | ❌ | ✅ | ❌ | ✅ RabbitMQ | ❌ |
+| statements-service | ❌  | NestJS + GraphQL | ✅ MySQL | ✅ | ❌ | ❌ | ❌ |
+| api-gateway | ✅ | Bun + Express | ❌ | ✅ | ❌ | ✅ RabbitMQ | ❌ |
 | tests-gun | ✅ | NodeJS + Vitest | ❌ | ❌ | ❌ | ❌ | ❌ |
+| monitoring | ✅ | Grafana + Loki | ❌ | ❌ | ❌ | ❌ | ✅ |
 
 ## Urls uteis
 
