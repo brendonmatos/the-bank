@@ -3,9 +3,9 @@ import { Movement } from './movement.model';
 
 @ObjectType()
 export class Account {
-  @Field(_ => Int)
+  @Field((_) => Int)
   id: number;
 
-  @Field(_ => [])
+  @Field((_) => [])
   movements: Movement[];
 }

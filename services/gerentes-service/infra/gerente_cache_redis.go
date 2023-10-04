@@ -3,6 +3,7 @@ package infra
 import (
 	"fmt"
 	"context"
+	"encoding/json"
 	"github.com/redis/go-redis/v9"
 	"github.com/brendonmatos/the-bank/services/gerentes-service/service"
 )

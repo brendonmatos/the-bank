@@ -2,9 +2,11 @@ const createServer = require('./create-server')
 const JWTController = require('./jwt')
 const { Producer, Consumer } = require('./events')
 
-const PORT = process.env.PORT || 3000
-const JWT_SECRET = process.env.JWT_SECRET || "shhhhhhhhhh";
+const PORT = process.env.SERVER_PORT || 3000
+const JWT_SECRET = process.env.JWT_SECRET
 const RABBITMQ_CONNECTION_URI = process.env.RABBITMQ_CONNECTION_URI
+
+if (!JWT_SECRET) throw new Error('JWT_SECRET is required')
 
 const jwt = new JWTController(JWT_SECRET)
 const consumer = new Consumer(RABBITMQ_CONNECTION_URI)

@@ -22,26 +22,28 @@ services:
   api-gateway:
     build: ./services/api-gateway
     env_file: .env
-    restart: always
+    # restart: always
 
     deploy:
       replicas: 1
 
     depends_on:
-      rabbitmq:
+      statement-service:
         condition: service_healthy
-      mysql-database:
-        condition: service_healthy
-      auth-service:
-        condition: service_healthy
-      contas-service:
-        condition: service_healthy
-      gerentes-service:
-        condition: service_healthy
-      clientes-service:
-        condition: service_healthy
-      fraudes-service:
-        condition: service_healthy
+      # rabbitmq:
+      #   condition: service_healthy
+      # mysql-database:
+      #   condition: service_healthy
+      # auth-service:
+      #   condition: service_healthy
+      # contas-service:
+      #   condition: service_healthy
+      # gerentes-service:
+      #   condition: service_healthy
+      # clientes-service:
+      #   condition: service_healthy
+      # fraudes-service:
+      #   condition: service_healthy
 
     healthcheck:
       test: "wget --no-verbose --tries=1 --spider http://localhost:3000/api/v1/health || exit 1"
@@ -54,8 +56,6 @@ services:
     mem_reservation: 128M
     cpus: 0.5
 
-    environment:
-      - PORT=3000
     volumes:
       - ./services/api-gateway/src:/app/src
     ports:
@@ -66,7 +66,7 @@ services:
   auth-service:
     build: ./services/auth-service
     env_file: .env
-    restart: always
+    # restart: always
 
     deploy:
       replicas: 1
@@ -90,8 +90,6 @@ services:
 
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_URL}/auth"
-      SERVER_SERVLET_CONTEXT_PATH: /
-      SERVER_PORT: 3000
 
     volumes:
       - $HOME/.m2:/root/.m2
@@ -99,10 +97,37 @@ services:
     networks:
       - thebank-net
 
+  # Microservice in NestJS
+  statement-service:
+    build: ./services/statement-service
+    env_file: .env
+
+    deploy:
+      replicas: 1
+
+    healthcheck:
+      test: "curl --fail --silent 0.0.0.0:${SERVER_PORT}/health | grep ok || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    depends_on:
+      redis:
+        condition: service_healthy
+        
+    expose:
+      - "3000:3000"
+
+    volumes:
+      - ./services/statement-service:/app
+
+    networks:
+      - thebank-net
+
   clientes-service:
     build: ./services/clientes-service
     env_file: .env
-    restart: always
+    # restart: always
 
     deploy:
       replicas: 1
@@ -126,8 +151,6 @@ services:
 
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_URL}/clientes"
-      SERVER_SERVLET_CONTEXT_PATH: /
-      SERVER_PORT: 3000
 
     volumes:
       - $HOME/.m2:/root/.m2
@@ -142,7 +165,7 @@ services:
       - ./services/fraudes-service:/app
       
     env_file: .env
-    restart: always
+    # restart: always
 
     deploy:
       replicas: 1
@@ -153,9 +176,6 @@ services:
     
     networks:
       - thebank-net
-
-    ports:
-      - "8001:8001"
     
     healthcheck:
       test: "wget --no-verbose --tries=1 --spider http://localhost:${SERVER_PORT}/health || exit 1"
@@ -174,7 +194,7 @@ services:
       context: ./services/gerentes-service
       dockerfile: dev.Dockerfile
     env_file: .env
-    restart: always
+    # restart: always
 
     deploy:
       replicas: 1
@@ -206,7 +226,7 @@ services:
   contas-service:
     build: ./services/contas-service
     env_file: .env
-    restart: always
+    # restart: always
 
     deploy:
       replicas: 1
@@ -232,8 +252,6 @@ services:
 
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_URL}/contas"
-      SERVER_SERVLET_CONTEXT_PATH: /
-      SERVER_PORT: 3000
 
     volumes:
       - $HOME/.m2:/root/.m2
@@ -270,9 +288,9 @@ services:
 
     healthcheck:
       test: rabbitmq-diagnostics -q ping
-      interval: 30s
+      interval: 4s
       timeout: 30s
-      retries: 3
+      retries: 100
 
     # reservations
     mem_limit: 1g
@@ -340,7 +358,7 @@ services:
     environment:
       PMA_HOST: ${MYSQL_HOST}
       PMA_PORT: ${MYSQL_PORT}
-    restart: always
+    # restart: always
 
     deploy:
       replicas: 1
