@@ -1,17 +1,24 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { DevtoolsModule } from '@nestjs/devtools-integration';
-import { HealthModule } from './health/health.module';
+import { Module } from "@nestjs/common";
+import { HealthModule } from "./health/health.module";
+import { GraphQLModule } from "@nestjs/graphql";
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { join } from "node:path";
+import { MovementModule } from "./movement/movement.module";
+import { AccountModule } from "./account/account.module";
 
 @Module({
   imports: [
-    HealthModule,
-    DevtoolsModule.register({
-      http: process.env.NODE_ENV !== 'production',
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      typePaths: ["./**/*.gql"],
+      definitions: {
+        path: join(process.cwd(), "src/graphql.types.ts"),
+        outputAs: "interface",
+      },
     }),
+    HealthModule,
+    MovementModule,
+    AccountModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule { }

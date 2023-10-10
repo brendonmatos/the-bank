@@ -114,8 +114,10 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
         
-    expose:
+    ports:
       - "3000:3000"
 
     volumes:

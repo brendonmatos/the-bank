@@ -1,0 +1,84 @@
+scalar Date
+
+type Account {
+  id: ID!
+  name: String!
+  balance: Int!
+  currency: String!
+  movements: [Movement!]!
+}
+
+enum MovementType {
+  INCOME
+  EXPENSE
+}
+
+enum MovementCategory {
+  FOOD
+  TRANSPORT
+  ENTERTAINMENT
+  OTHER
+}
+
+enum MovementCurrency {
+  EUR
+  USD
+  GBP
+  BRL
+}
+
+enum MovementStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+type Movement {
+  id: ID!
+  date: Date!
+  description: String!
+  amount: Int!
+  transactionId: String!
+  receipt: Receipt
+  type: MovementType!
+  category: MovementCategory!
+  currency: MovementCurrency!
+  status: MovementStatus!
+  account: Account!
+}
+
+type Receipt {
+  id: ID!
+  url: String!
+}
+
+input MovementListQuery {
+  limit: Int
+  offset: Int
+  startDate: Date
+  endDate: Date
+  text: String
+  category: String
+  type: String
+}
+
+type Query {
+  list(query: MovementListQuery): [Movement!]!
+  account(id: ID!): Account!
+}
+
+# type Mutation {
+
+# }
+
+# type Subscription {
+#   currentBalance: Int!
+# }
+
+# query root
+
+schema {
+  query: Query
+  # mutation: Mutation
+  # subscription: Subscription
+}
