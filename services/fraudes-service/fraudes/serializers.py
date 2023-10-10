@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import fraudesAnalysis
+from .models import FraudesAnalysis
 
-class fraudesAnalysisSerializer(serializers.ModelSerializer):
+class FraudesAnalysisSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = fraudesAnalysis
+		model = FraudesAnalysis
 		fields = '__all__'
 
 	

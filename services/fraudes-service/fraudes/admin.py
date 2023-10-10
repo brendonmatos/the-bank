@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from fraudes.models import fraudesAnalysis
+from fraudes.models import FraudesAnalysis
 
-admin.site.register(fraudesAnalysis)
+admin.site.register(FraudesAnalysis)
