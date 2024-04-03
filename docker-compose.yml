@@ -28,22 +28,22 @@ services:
       replicas: 1
 
     depends_on:
-      statement-service:
+      # statement-service:
+      #   condition: service_healthy
+      rabbitmq:
         condition: service_healthy
-      # rabbitmq:
-      #   condition: service_healthy
-      # mysql-database:
-      #   condition: service_healthy
-      # auth-service:
-      #   condition: service_healthy
-      # contas-service:
-      #   condition: service_healthy
-      # gerentes-service:
-      #   condition: service_healthy
-      # clientes-service:
-      #   condition: service_healthy
-      # fraudes-service:
-      #   condition: service_healthy
+      mysql-database:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+      contas-service:
+        condition: service_healthy
+      gerentes-service:
+        condition: service_healthy
+      clientes-service:
+        condition: service_healthy
+      fraudes-service:
+        condition: service_healthy
 
     healthcheck:
       test: "wget --no-verbose --tries=1 --spider http://localhost:3000/api/v1/health || exit 1"
@@ -51,10 +51,10 @@ services:
       timeout: 2s
       retries: 20
 
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
+    <<: &default_reservations
+      mem_limit: 512m
+      mem_reservation: 128m
+      cpus: 0.5
 
     volumes:
       - ./services/api-gateway/src:/app/src
@@ -84,10 +84,8 @@ services:
       retries: 5
       start_period: 40s
 
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
-
+    <<: *default_reservations
+  
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_URL}/auth"
 
@@ -103,7 +101,9 @@ services:
     env_file: .env
 
     deploy:
-      replicas: 1
+      replicas: 0
+
+    <<: *default_reservations
 
     healthcheck:
       test: "curl --fail --silent 0.0.0.0:${SERVER_PORT}/health | grep ok || exit 1"
@@ -134,7 +134,7 @@ services:
     deploy:
       replicas: 1
 
-    healthcheck:
+    healthcheck: &healthcheck_java
       test: "curl --fail --silent localhost:${SERVER_PORT}/actuator/health | grep UP || exit 1"
       interval: 20s
       timeout: 5s
@@ -147,9 +147,7 @@ services:
       mysql-database:
         condition: service_healthy
 
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
+    <<: *default_reservations
 
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_URL}/clientes"
@@ -172,9 +170,7 @@ services:
     deploy:
       replicas: 1
 
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
+    <<: *default_reservations
     
     networks:
       - thebank-net
@@ -233,12 +229,7 @@ services:
     deploy:
       replicas: 1
 
-    healthcheck:
-      test: "curl --fail --silent localhost:${SERVER_PORT}/actuator/health | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 5
-      start_period: 40s
+    healthcheck: *healthcheck_java
 
     # dependencies
     depends_on:
@@ -248,9 +239,7 @@ services:
         condition: service_healthy
 
     # reservations
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
+    <<: *default_reservations
 
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://${MYSQL_URL}/contas"
@@ -266,9 +255,7 @@ services:
     env_file: .env
 
     # reservations
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
+    <<: *default_reservations
 
     deploy:
       replicas: 1
@@ -294,10 +281,7 @@ services:
       timeout: 30s
       retries: 100
 
-    # reservations
-    mem_limit: 1g
-    mem_reservation: 512m
-    cpus: 0.5
+    <<: *default_reservations
 
     deploy:
       replicas: 1
@@ -326,10 +310,7 @@ services:
     build: ./services/mysql
     env_file: .env
 
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128m
-    cpus: 0.5
+    <<: *default_reservations
 
     deploy:
       replicas: 1
@@ -369,10 +350,7 @@ services:
       mysql-database:
         condition: service_healthy
 
-    # reservations
-    mem_limit: 512m
-    mem_reservation: 128m
-    cpus: 0.5
+    <<: *default_reservations
 
     ports:
       - 8081:80
@@ -381,9 +359,9 @@ services:
 
   loki:
     image: grafana/loki:2.6.1
-    mem_limit: 512m
-    mem_reservation: 128m
-    cpus: 0.5
+    
+    <<: *default_reservations
+
     ports:
       - "3100"
     volumes:
@@ -392,9 +370,9 @@ services:
 
   promtail:
     image: grafana/promtail:2.6.1
-    mem_limit: 512m
-    mem_reservation: 128m
-    cpus: 0.5
+
+    <<: *default_reservations
+
     volumes:
       # custom config will read logs from the containers of
       # this project
@@ -405,9 +383,9 @@ services:
 
   grafana:
     image: grafana/grafana:9.2.2
-    mem_limit: 512m
-    mem_reservation: 128m
-    cpus: 0.5
+
+    <<: *default_reservations
+
     ports:
       - "3001:3001"
     environment:
